@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhotoSo — Photo Sorter</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- ── SETUP SCREEN ── -->
+    <div id="screen-setup" class="screen active">
+      <div class="setup-bg-text">SORT</div>
+      <div class="setup-container">
+        <header class="setup-header">
+          <h1 class="logo">Photo<em>So</em></h1>
+          <p class="tagline">Sort your photos. Fast.</p>
+        </header>
+
+        <div class="folder-pickers">
+          <div class="folder-card" id="card-source">
+            <div class="folder-card-label">01</div>
+            <div class="folder-card-content">
+              <span class="folder-card-title">Source Folder</span>
+              <span class="folder-card-desc">Where your photos live</span>
+              <button class="btn-folder" data-target="source">
+                Choose Folder
+              </button>
+              <span class="folder-name" id="name-source"
+                >No folder selected</span
+              >
+            </div>
+            <div class="folder-card-icon">⬚</div>
+          </div>
+          <div class="folder-card" id="card-accepted">
+            <div class="folder-card-label">02</div>
+            <div class="folder-card-content">
+              <span class="folder-card-title">Accepted Folder</span>
+              <span class="folder-card-desc">Keepers go here</span>
+              <button class="btn-folder" data-target="accepted">
+                Choose Folder
+              </button>
+              <span class="folder-name" id="name-accepted"
+                >No folder selected</span
+              >
+            </div>
+            <div class="folder-card-icon">✓</div>
+          </div>
+          <div class="folder-card" id="card-rejected">
+            <div class="folder-card-label">03</div>
+            <div class="folder-card-content">
+              <span class="folder-card-title">Rejected Folder</span>
+              <span class="folder-card-desc">Rejects go here</span>
+              <button class="btn-folder" data-target="rejected">
+                Choose Folder
+              </button>
+              <span class="folder-name" id="name-rejected"
+                >No folder selected</span
+              >
+            </div>
+            <div class="folder-card-icon">✕</div>
+          </div>
+        </div>
+
+        <button class="btn-start" id="btn-start" disabled>
+          Start Sorting <span class="btn-arrow">→</span>
+        </button>
+
+        <div class="shortcuts-hint">
+          <span><kbd>←</kbd><kbd>→</kbd> Navigate</span>
+          <span><kbd>A</kbd> Accept</span>
+          <span><kbd>R</kbd> Reject</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TRIAGE SCREEN ── -->
+    <div id="screen-triage" class="screen">
+      <div class="triage-topbar">
+        <span class="triage-logo">Photo<em>So</em></span>
+
+        <div class="topbar-center">
+          <!-- Four live count pills (clickable to filter) -->
+          <div class="live-counts">
+            <button
+              class="count-pill pill-accepted"
+              id="pill-accepted"
+              title="Filter: Accepted"
+            >
+              <span class="pill-dot"></span>
+              <span class="pill-num" id="count-accepted">0</span>
+              <span class="pill-label">accepted</span>
+            </button>
+            <button
+              class="count-pill pill-rejected"
+              id="pill-rejected"
+              title="Filter: Rejected"
+            >
+              <span class="pill-dot"></span>
+              <span class="pill-num" id="count-rejected">0</span>
+              <span class="pill-label">rejected</span>
+            </button>
+            <button
+              class="count-pill pill-decide-later"
+              id="pill-decide-later"
+              title="Filter: Decide Later"
+            >
+              <span class="pill-dot"></span>
+              <span class="pill-num" id="count-decide-later">0</span>
+              <span class="pill-label">decide later</span>
+            </button>
+            <button
+              class="count-pill pill-pending"
+              id="pill-pending"
+              title="Filter: Pending"
+            >
+              <span class="pill-dot"></span>
+              <span class="pill-num" id="count-pending">0</span>
+              <span class="pill-label">pending</span>
+            </button>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-text" id="progress-text">0 / 0</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn-quit" id="btn-quit">✕ Quit</button>
+        </div>
+      </div>
+
+      <div class="photo-stage" id="photo-stage">
+        <div class="state-badge badge-pending" id="state-badge">Pending</div>
+
+        <div class="photo-frame" id="photo-frame">
+          <img id="photo-img" src="" alt="Current photo" />
+          <div class="zoom-hint">Click to zoom</div>
+        </div>
+
+        <!-- Empty filter state -->
+        <div class="empty-filter-msg" id="empty-filter-msg">
+          <span class="empty-filter-icon">◉</span>
+          <span>No <strong id="empty-filter-label">—</strong> photos yet</span>
+          <span class="empty-filter-hint"
+            >Click the pill again to clear filter</span
+          >
+        </div>
+
+        <div class="swipe-overlay left" id="overlay-reject">REJECT</div>
+        <div class="swipe-overlay right" id="overlay-accept">ACCEPT</div>
+      </div>
+
+      <div class="triage-footer">
+        <div class="photo-filename" id="photo-filename"></div>
+        <div class="action-buttons">
+          <button class="btn-action btn-reject" id="btn-reject">
+            <span class="btn-icon">✕</span>
+            <span class="btn-label">Reject</span>
+            <kbd>R</kbd>
+          </button>
+
+          <div class="nav-cluster">
+            <button class="btn-nav" id="btn-prev" disabled title="Previous (←)">
+              ‹
+            </button>
+            <button
+              class="btn-action btn-decide-later hidden"
+              id="btn-decide-later"
+            >
+              <span class="btn-icon">◷</span>
+              <span class="btn-label">Decide Later</span>
+            </button>
+            <button class="btn-nav" id="btn-next" title="Next (→)">›</button>
+          </div>
+
+          <button class="btn-action btn-accept" id="btn-accept">
+            <span class="btn-icon">✓</span>
+            <span class="btn-label">Accept</span>
+            <kbd>A</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DONE SCREEN ── -->
+    <div id="screen-done" class="screen">
+      <div class="done-container">
+        <div class="done-bg-text">DONE</div>
+        <h2 class="done-title" id="done-title">Session Complete</h2>
+
+        <!-- Auto-complete: source empty -->
+        <div class="done-stats" id="done-auto-stats" style="display: none">
+          <div class="stat-card accepted-stat">
+            <span class="stat-number" id="stat-accepted">0</span>
+            <span class="stat-label">Accepted</span>
+          </div>
+          <div class="stat-card rejected-stat">
+            <span class="stat-number" id="stat-rejected">0</span>
+            <span class="stat-label">Rejected</span>
+          </div>
+        </div>
+
+        <!-- Manual quit: accepted + rejected + remaining -->
+        <div class="done-stats" id="done-manual-stats" style="display: none">
+          <div class="stat-card accepted-stat">
+            <span class="stat-number" id="stat-accepted-manual">0</span>
+            <span class="stat-label">Accepted</span>
+          </div>
+          <div class="stat-card rejected-stat">
+            <span class="stat-number" id="stat-rejected-manual">0</span>
+            <span class="stat-label">Rejected</span>
+          </div>
+          <div class="stat-card remaining-stat">
+            <span class="stat-number" id="stat-remaining">0</span>
+            <span class="stat-label">Remaining</span>
+          </div>
+        </div>
+
+        <button class="btn-start" id="btn-restart">
+          Sort Another Batch <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── ZOOM MODAL ── -->
+    <div class="zoom-modal" id="zoom-modal">
+      <img id="zoom-img" src="" alt="Zoomed photo" />
+      <button class="zoom-close" id="zoom-close">✕</button>
+    </div>
+
+    <!-- ── RESUME MODAL ── -->
+    <div class="resume-modal" id="resume-modal">
+      <div class="resume-card">
+        <h3 class="resume-title">Previous Session Found</h3>
+        <p class="resume-desc">These folders already contain sorted photos.</p>
+        <div class="resume-counts">
+          <div class="resume-count pill-accepted">
+            <span class="pill-dot"></span>
+            <span id="resume-accepted-count">0</span> accepted
+          </div>
+          <div class="resume-count pill-rejected">
+            <span class="pill-dot"></span>
+            <span id="resume-rejected-count">0</span> rejected
+          </div>
+        </div>
+        <div class="resume-actions">
+          <button class="btn-resume-option btn-fresh" id="btn-start-fresh">
+            Start Fresh
+            <span class="resume-option-desc"
+              >Move all sorted photos back to source</span
+            >
+          </button>
+          <button class="btn-resume-option btn-resume-primary" id="btn-resume">
+            Resume Session
+            <span class="resume-option-desc">Continue where you left off</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+
+    <div class="install-toast" id="install-toast">
+      <div class="install-toast-btn">
+        <div class="install-toast-icon">⬇</div>
+        <div class="install-toast-text">
+          <span class="install-toast-title">
+            <span
+              id="install-toast-btn"
+              style="color: var(--accent-accept); cursor: pointer"
+            >
+              Install
+            </span>
+            <span class="logo small">Photo<em>So</em> </span>
+            <span>App</span>
+          </span>
+        </div>
+      </div>
+      <button
+        class="install-toast-close"
+        id="install-toast-close"
+        title="Dismiss"
+      >
+        ✕
+      </button>
+    </div>
+
+    <script>
+      let deferredPrompt = null;
+      const toast = document.getElementById("install-toast");
+      const installBtn = document.getElementById("install-toast-btn");
+      const closeBtn = document.getElementById("install-toast-close");
+
+      // Browser fires this when app is installable
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show toast (comes back on every refresh unless actually installed)
+        setTimeout(() => toast.classList.add("visible"), 1200);
+      });
+
+      // User clicks Install
+      installBtn.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        toast.classList.remove("visible");
+      });
+
+      // User dismisses — hide for this session only (reappears on refresh)
+      closeBtn.addEventListener("click", () => {
+        toast.classList.remove("visible");
+      });
+
+      // Hide toast if app gets installed
+      window.addEventListener("appinstalled", () => {
+        toast.classList.remove("visible");
+        deferredPrompt = null;
+      });
+    </script>
+  </body>
+</html>
