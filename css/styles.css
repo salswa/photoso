@@ -1063,3 +1063,98 @@ body {
 .install-toast-close:hover {
   color: var(--text);
 }
+
+/* ══════════════════════════════════════════════
+   UNSUPPORTED BROWSER SCREEN
+══════════════════════════════════════════════ */
+#screen-unsupported {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.unsupported-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
+  max-width: 480px;
+  padding: 2rem;
+  padding-top: 1rem;
+  margin-top: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.unsupported-icon {
+  font-size: 2.5rem;
+  color: var(--accent-decide);
+  line-height: 1;
+}
+
+.unsupported-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.unsupported-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.unsupported-desc strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.unsupported-supported {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.unsupported-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.unsupported-browsers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.browser-tag {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  padding: 0.25rem 0.7rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(76, 175, 125, 0.35);
+  background: rgba(76, 175, 125, 0.08);
+  color: var(--accent-accept);
+}
+
+.browser-tag-no {
+  border-color: rgba(224, 82, 82, 0.35);
+  background: rgba(224, 82, 82, 0.08);
+  color: var(--accent-reject);
+}
+
+.mobile-coming-soon {
+  position: absolute;
+  bottom: 1.2rem;
+  right: 1.4rem;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}

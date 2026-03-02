@@ -14,6 +14,41 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
+    <div
+      id="screen-unsupported"
+      class="screen"
+      style="display: none; opacity: 0"
+    >
+      <header class="setup-header">
+        <h1 class="logo">Photo<em>So</em></h1>
+        <p class="tagline">Sort your photos. Fast.</p>
+      </header>
+      <div class="unsupported-container">
+        <div class="unsupported-icon">⚠</div>
+        <h2 class="unsupported-title">Browser Not Supported</h2>
+        <p class="unsupported-desc">
+          PhotoSo is a desktop app that requires the
+          <strong>File System Access</strong> to read and move photos directly
+          on your machine. Your current browser does not support this.
+        </p>
+        <div class="unsupported-supported">
+          <span class="unsupported-label">Works on</span>
+          <div class="unsupported-browsers">
+            <span class="browser-tag">Chrome 86+</span>
+            <span class="browser-tag">Edge 86+</span>
+            <span class="browser-tag">Opera 72+</span>
+          </div>
+          <span class="unsupported-label" style="margin-top: 0.8rem"
+            >Does not work on</span
+          >
+          <div class="unsupported-browsers">
+            <span class="browser-tag browser-tag-no">Firefox</span>
+            <span class="browser-tag browser-tag-no">Safari</span>
+            <span class="browser-tag browser-tag-no">iOS (all browsers)</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- ── SETUP SCREEN ── -->
     <div id="screen-setup" class="screen active">
       <div class="setup-bg-text">SORT</div>
@@ -268,6 +303,15 @@
       </div>
     </div>
 
+    <!-- Browser support check — runs before anything else -->
+    <script>
+      if (!("showDirectoryPicker" in window)) {
+        document.getElementById("screen-unsupported").style.display = "flex";
+        document.getElementById("screen-unsupported").style.opacity = "1";
+        document.getElementById("screen-setup").classList.remove("active");
+      }
+    </script>
+
     <script type="module" src="js/app.js"></script>
 
     <div class="install-toast" id="install-toast">
@@ -329,5 +373,6 @@
         deferredPrompt = null;
       });
     </script>
+    <span class="mobile-coming-soon">📱 Mobile support coming soon</span>
   </body>
 </html>
