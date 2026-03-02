@@ -373,6 +373,25 @@
         deferredPrompt = null;
       });
     </script>
+    <!-- ── Mobile Popover ── -->
+    <div class="mobile-popover" id="mobile-popover">
+      <div class="mobile-popover-box">
+        <div class="mobile-popover-icon">🖥️</div>
+        <p class="mobile-popover-title">Currently Desktop Only App</p>
+        <p class="mobile-popover-desc">
+          PhotoSo is currently optimised for desktop. Open it on your laptop or
+          PC for the full experience.
+        </p>
+        <span class="mobile-popover-badge">📱 Mobile support coming soon</span>
+      </div>
+    </div>
+
+    <script>
+      // Show mobile popover on small screens
+      if (window.innerWidth < 768) {
+        document.getElementById("mobile-popover").classList.add("visible");
+      }
+    </script>
     <span class="mobile-coming-soon">📱 Mobile support coming soon</span>
   </body>
 </html>
